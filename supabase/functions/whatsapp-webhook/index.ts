@@ -1,5 +1,6 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { serve } from "https://deno.land/std@0.200.0/http/server.ts"
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3'
+import { corsHeaders } from '../_shared/cors.ts'
 
 interface WebhookMessage {
   key: {
@@ -26,13 +27,16 @@ interface Settings {
 }
 
 serve(async (req) => {
+  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response('ok', {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST',
-        'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-      },
+    return new Response('ok', { headers: corsHeaders })
+  }
+
+  // Only allow POST requests
+  if (req.method !== 'POST') {
+    return new Response('Method not allowed', { 
+      status: 405, 
+      headers: corsHeaders 
     })
   }
 
@@ -43,7 +47,11 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    const { data: webhookData } = await req.json()
+    // Parse webhook data more safely
+    const webhookData = await req.json()
+    
+    // Handle Evolution API webhook format
+    const actualData = webhookData.data || webhookData
     console.log('📨 Webhook recebido:', JSON.stringify(webhookData, null, 2))
 
     // Buscar configurações
@@ -64,10 +72,13 @@ serve(async (req) => {
     }
 
     // Validar mensagem
-    const message = webhookData as WebhookMessage
-    if (!isValidMessage(message)) {
+    const message = actualData as WebhookMessage
+    if (!message || !isValidMessage(message)) {
       console.log('⚠️ Mensagem inválida ignorada')
-      return new Response('Mensagem inválida', { status: 200 })
+      return new Response(JSON.stringify({ success: true, message: 'Invalid message ignored' }), {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
     }
 
     // Extrair dados da mensagem
@@ -105,25 +116,37 @@ serve(async (req) => {
       console.log(`✅ Processamento concluído para ${userNumber}`)
     }
 
-    return new Response(JSON.stringify({ success: true }), {
-      headers: { 'Content-Type': 'application/json' },
+    return new Response(JSON.stringify({ 
+      success: true, 
+      message: 'Message processed successfully',
+      userNumber: userNumber
+    }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
 
   } catch (error) {
     console.error('❌ Erro no webhook:', error)
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ 
+      error: error.message,
+      success: false 
+    }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   }
 })
 
 function isValidMessage(message: WebhookMessage): boolean {
+  // Verificar se a estrutura básica existe
+  if (!message || !message.key || !message.message) {
+    return false
+  }
+  
   // Ignora mensagens da própria instância
   if (message.key.fromMe) return false
   
   // Ignora grupos
-  if (message.key.remoteJid.includes('@g.us')) return false
+  if (message.key.remoteJid && message.key.remoteJid.includes('@g.us')) return false
   
   // Verifica se tem texto
   const text = extractMessageText(message)
@@ -141,7 +164,8 @@ function extractMessageText(message: WebhookMessage): string {
 }
 
 function extractUserNumber(message: WebhookMessage): string {
-  return message.key.remoteJid.replace('@s.whatsapp.net', '')
+  if (!message.key?.remoteJid) return 'unknown'
+  return message.key.remoteJid.replace('@s.whatsapp.net', '').replace('@c.us', '')
 }
 
 async function processWithAI(

@@ -18,8 +18,10 @@
     "supabase:stop": "npx supabase stop",
     "supabase:reset": "npx supabase db reset",
     "supabase:migrate": "npx supabase db push",
-    "supabase:functions:deploy": "npx supabase functions deploy whatsapp-webhook",
-    "supabase:functions:logs": "npx supabase functions logs whatsapp-webhook",
+    "supabase:functions:deploy": "npx supabase functions deploy whatsapp-webhook --project-ref zyalymcmcufrnnbkqkmg",
+    "supabase:functions:logs": "npx supabase functions logs whatsapp-webhook --project-ref zyalymcmcufrnnbkqkmg",
+    "supabase:functions:serve": "npx supabase functions serve whatsapp-webhook",
+    "test:webhook": "node test-webhook.js",
     "test": "echo \"Tests not implemented yet\" && exit 1"
   },
   "dependencies": {
