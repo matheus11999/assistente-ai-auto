@@ -14,7 +14,105 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      logs_mensagens: {
+        Row: {
+          id: string
+          mensagem_usuario: string
+          numero_usuario: string
+          resposta_ia: string | null
+          timestamp: string
+        }
+        Insert: {
+          id?: string
+          mensagem_usuario: string
+          numero_usuario: string
+          resposta_ia?: string | null
+          timestamp?: string
+        }
+        Update: {
+          id?: string
+          mensagem_usuario?: string
+          numero_usuario?: string
+          resposta_ia?: string | null
+          timestamp?: string
+        }
+        Relationships: []
+      }
+      produtos: {
+        Row: {
+          created_at: string
+          descricao: string | null
+          id: string
+          modelo_aparelho: string
+          nome: string
+          preco: number
+          quantidade: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          modelo_aparelho: string
+          nome: string
+          preco?: number
+          quantidade?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          modelo_aparelho?: string
+          nome?: string
+          preco?: number
+          quantidade?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      settings: {
+        Row: {
+          balanca_modelo: string | null
+          balanca_status: string | null
+          created_at: string
+          evolution_token: string | null
+          ia_ativa: boolean | null
+          id: string
+          instancia_id: string | null
+          nome_ia: string | null
+          openrouter_api: string | null
+          openrouter_model: string | null
+          updated_at: string
+        }
+        Insert: {
+          balanca_modelo?: string | null
+          balanca_status?: string | null
+          created_at?: string
+          evolution_token?: string | null
+          ia_ativa?: boolean | null
+          id?: string
+          instancia_id?: string | null
+          nome_ia?: string | null
+          openrouter_api?: string | null
+          openrouter_model?: string | null
+          updated_at?: string
+        }
+        Update: {
+          balanca_modelo?: string | null
+          balanca_status?: string | null
+          created_at?: string
+          evolution_token?: string | null
+          ia_ativa?: boolean | null
+          id?: string
+          instancia_id?: string | null
+          nome_ia?: string | null
+          openrouter_api?: string | null
+          openrouter_model?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
