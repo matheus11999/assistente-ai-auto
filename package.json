@@ -1,14 +1,24 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "assistente-ai-auto",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "description": "Sistema de Assistente Técnico com IA para WhatsApp usando Evolution API e OpenRouter",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "build:dev": "vite build --mode development",
+    "start": "vite preview --port $PORT --host 0.0.0.0",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "supabase:start": "npx supabase start",
+    "supabase:stop": "npx supabase stop",
+    "supabase:reset": "npx supabase db reset",
+    "supabase:migrate": "npx supabase db push",
+    "supabase:functions:deploy": "npx supabase functions deploy whatsapp-webhook",
+    "supabase:functions:logs": "npx supabase functions logs whatsapp-webhook",
+    "test": "echo \"Tests not implemented yet\" && exit 1"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
