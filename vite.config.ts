@@ -35,6 +35,12 @@ export default defineConfig(({ mode }) => ({
   preview: {
     host: "0.0.0.0",
     port: process.env.PORT ? parseInt(process.env.PORT) : 4173,
-    allowedHosts: "all",
+    allowedHosts: ["evoapi-sos3.ttvjwi.easypanel.host", "localhost", "127.0.0.1", ".easypanel.host"],
+    strictPort: false,
+  },
+  server: {
+    host: "0.0.0.0",
+    port: 8080,
+    allowedHosts: ["evoapi-sos3.ttvjwi.easypanel.host", "localhost", "127.0.0.1", ".easypanel.host"],
   },
 }));
