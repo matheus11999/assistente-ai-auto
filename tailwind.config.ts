@@ -52,6 +52,13 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				// Tech Assistant Colors
+				'tech-blue': 'hsl(var(--tech-blue))',
+				'tech-blue-dark': 'hsl(var(--tech-blue-dark))',
+				'tech-green': 'hsl(var(--tech-green))',
+				'tech-green-dark': 'hsl(var(--tech-green-dark))',
+				'tech-purple': 'hsl(var(--tech-purple))',
+				'tech-orange': 'hsl(var(--tech-orange))',
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
